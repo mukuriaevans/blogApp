@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const e = require("express");
 
 // connect to mongodb using Mongoose
-mongoose.connect('mongodb://localhost:27017/blogDB');
+mongoose.connect('mongodb+srv://admin-evans:Test-2030@cluster0.zyra5kw.mongodb.net/blogDB');
 
 
 // Create a schema
