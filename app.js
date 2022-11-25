@@ -6,6 +6,7 @@ const ejs = require("ejs");
 const _ = require("lodash");
 const mongoose = require('mongoose');
 const e = require("express");
+const url = require('url');
 
 // connect to mongodb using Mongoose
 mongoose.connect('mongodb+srv://admin-evans:Test-2030@cluster0.zyra5kw.mongodb.net/blogDB');
@@ -26,7 +27,8 @@ const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui 
 
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
 
-  const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
+const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
+
 
 
 const app = express();
@@ -59,16 +61,17 @@ app.get("/contact", function(req, res){
 
 // Open the post composing page
 app.get("/compose", function(req, res){
+  console.log("Compose a new post");
   res.render("compose");
 });
 
 // Open posts using their post._id
 app.get("/posts/:postID", function(req, res){
-  const requestedPostId = req.params.postID;
+  requestedPostId = req.params.postID;
 
   Post.findOne({_id:requestedPostId}, function(err, post){
     if(!err){
-      res.render("post", {title:post.title, content:post.content})
+      res.render("post", {title:post.title, content:post.content, postId:post._id})
     }
   });
  
@@ -96,17 +99,17 @@ app.post("/compose", function(req, res){
     
 });
 
-app.get('/delete', function(req, res){
-  const deletepost = req.body.deletePost;
-  const postID = req.params.postID
-  if(deletepost){
-    Post.findByIdAndDelete(postID, function(err){
-      if(!err){
-        res.redirect('/');
-        console.log("Post deleted successuly");
-      }
-    });
-  }
+app.post('/delete', function(req, res){
+  // get the _id if the current post
+  const deletePostId = req.body.deletePost;
+  console.log(deletePostId);
+  // find and remove the post from PostDb using its ID 
+  Post.findByIdAndDelete(deletePostId, function(err){
+    if(!err){
+      res.redirect('/');
+      console.log("Post deleted successuly");
+    }
+  });
   
 });
 

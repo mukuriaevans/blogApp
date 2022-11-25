@@ -6,8 +6,11 @@
     <div class="postBody">
     <p><%= content %> </p>
     </div>
-    <button class="btn btn-outline-primary btn-sm px-3 mx-3" type="submit" name="editPost" >Edit Post</button>
-    <button class="btn btn-outline-danger btn-sm px-3 mx-3" type="submit" name="deletePost" >Delete Post</button>
+    <form action="/delete" method="POST">
+        <button class="btn btn-outline-primary btn-sm px-3 mx-3" type="submit" name="editPost" value="edit">Edit Post</button>
+
+        <button class="btn btn-outline-danger btn-sm px-3 mx-3" type="submit" name="deletePost" value=<%= postId %>  >Delete Post</button>
+    </form>
     
 </div>
 <%- include("partials/footer") -%> 
